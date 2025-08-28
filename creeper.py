@@ -16,7 +16,7 @@ creeper = [
     verde, negro, negro, verde, verde, negro, negro, verde,
     verde, verde, verde, negro, negro, verde, verde, verde,
     verde, verde, negro, negro, negro, negro, verde, verde,
-    verde, negro, verde, negro, negro, verde, negro, verde,
+    verde, verde, negro, negro, negro, negro, verde, verde,
     verde, verde, negro, verde, verde, negro, verde, verde
 ]
 
