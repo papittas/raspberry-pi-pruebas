@@ -26,15 +26,17 @@ class ConwayGame:
         self.generation = 0
         self.paused = False
         
-        print("🧬 JUEGO DE LA VIDA DE CONWAY")
-        print("📋 CONTROLES:")
-        print("   ↑↓←→  : Mover cursor")
-        print("   ENTER : Colocar/quitar célula")
-        print("   Y     : Iniciar/pausar simulación")
-        print("   SPACE : Limpiar grilla")
-        print("   R     : Modo edición")
-        print("   ESC   : Salir")
-        print("\n🎯 ¡Crea patrones y observa la evolución!")
+        print("JUEGO DE LA VIDA DE CONWAY")
+        print("CONTROLES:")
+        print("   Flechas del joystick: Mover cursor")
+        print("   Centro del joystick: Colocar/quitar celula")
+        print("   Comandos de consola:")
+        print("     y - Iniciar/pausar simulacion")
+        print("     c - Limpiar grilla")
+        print("     1-4 - Cargar patrones")
+        print("     h - Ayuda")
+        print("     q - Salir")
+        print("\nCrea patrones y observa la evolucion!")
         
     def count_neighbors(self, x, y):
         """Cuenta los vecinos vivos de una célula"""
@@ -72,12 +74,12 @@ class ConwayGame:
         self.grid = new_grid
         self.generation += 1
         
-        print(f"🧬 Generación {self.generation}")
+        print(f"Generacion {self.generation}")
         
         # Verificar si hay células vivas
         alive_count = sum(sum(row) for row in self.grid)
         if alive_count == 0:
-            print("💀 Todas las células han muerto - simulación detenida")
+            print("Todas las celulas han muerto - simulacion detenida")
             self.editing_mode = True
             self.generation = 0
     
@@ -85,13 +87,13 @@ class ConwayGame:
         """Alternar el estado de una célula"""
         self.grid[y][x] = not self.grid[y][x]
         action = "colocada" if self.grid[y][x] else "eliminada"
-        print(f"🎯 Célula {action} en ({x}, {y})")
+        print(f"Celula {action} en ({x}, {y})")
     
     def clear_grid(self):
         """Limpiar toda la grilla"""
         self.grid = [[False for _ in range(8)] for _ in range(8)]
         self.generation = 0
-        print("🧹 Grilla limpiada")
+        print("Grilla limpiada")
     
     def load_pattern(self, pattern_name):
         """Cargar patrones predefinidos"""
@@ -103,7 +105,7 @@ class ConwayGame:
             for x, y in pattern:
                 if 0 <= x < 8 and 0 <= y < 8:
                     self.grid[y][x] = True
-            print("🛸 Patrón 'Glider' cargado")
+            print("Patron 'Glider' cargado")
             
         elif pattern_name == "blinker":
             # Oscilador simple
@@ -111,7 +113,7 @@ class ConwayGame:
             for x, y in pattern:
                 if 0 <= x < 8 and 0 <= y < 8:
                     self.grid[y][x] = True
-            print("💫 Patrón 'Blinker' cargado")
+            print("Patron 'Blinker' cargado")
             
         elif pattern_name == "block":
             # Bloque estático
@@ -119,7 +121,7 @@ class ConwayGame:
             for x, y in pattern:
                 if 0 <= x < 8 and 0 <= y < 8:
                     self.grid[y][x] = True
-            print("🟩 Patrón 'Block' cargado")
+            print("Patron 'Block' cargado")
             
         elif pattern_name == "toad":
             # Oscilador toad
@@ -127,7 +129,7 @@ class ConwayGame:
             for x, y in pattern:
                 if 0 <= x < 8 and 0 <= y < 8:
                     self.grid[y][x] = True
-            print("🐸 Patrón 'Toad' cargado")
+            print("Patron 'Toad' cargado")
     
     def render(self):
         """Renderizar la grilla en el Sense HAT"""
@@ -161,19 +163,19 @@ def handle_keyboard_input(game):
             
         if event.direction == 'up':
             game.cursor_y = max(0, game.cursor_y - 1)
-            print(f"📍 Cursor en ({game.cursor_x}, {game.cursor_y})")
+            print(f"Cursor en ({game.cursor_x}, {game.cursor_y})")
             
         elif event.direction == 'down':
             game.cursor_y = min(7, game.cursor_y + 1)
-            print(f"📍 Cursor en ({game.cursor_x}, {game.cursor_y})")
+            print(f"Cursor en ({game.cursor_x}, {game.cursor_y})")
             
         elif event.direction == 'left':
             game.cursor_x = max(0, game.cursor_x - 1)
-            print(f"📍 Cursor en ({game.cursor_x}, {game.cursor_y})")
+            print(f"Cursor en ({game.cursor_x}, {game.cursor_y})")
             
         elif event.direction == 'right':
             game.cursor_x = min(7, game.cursor_x + 1)
-            print(f"📍 Cursor en ({game.cursor_x}, {game.cursor_y})")
+            print(f"Cursor en ({game.cursor_x}, {game.cursor_y})")
             
         elif event.direction == 'middle':
             if game.editing_mode:
@@ -183,9 +185,89 @@ def handle_keyboard_input(game):
                 # En modo simulación, pausar/reanudar
                 game.paused = not game.paused
                 status = "pausada" if game.paused else "reanudada"
-                print(f"⏯️ Simulación {status}")
+                print(f"Simulacion {status}")
     
     sense.stick.direction_any = joystick_pressed
+
+def handle_console_input(game):
+    """Maneja comandos desde la consola de manera no bloqueante"""
+    import threading
+    import sys
+    import select
+    
+    def console_thread():
+        while True:
+            try:
+                # Solo en Linux/Unix - para Windows usar input() alternativo
+                if hasattr(select, 'select'):
+                    ready, _, _ = select.select([sys.stdin], [], [], 0.1)
+                    if ready:
+                        command = sys.stdin.readline().strip().lower()
+                        process_command(command, game)
+                else:
+                    # Para Windows - método simplificado
+                    time.sleep(0.1)
+            except:
+                time.sleep(0.1)
+    
+    def process_command(command, game):
+        if command == 'y':
+            # Alternar entre modo edición y simulación
+            if game.editing_mode:
+                game.editing_mode = False
+                game.paused = False
+                print("Modo SIMULACION iniciado")
+            else:
+                game.editing_mode = True
+                print("Modo EDICION activado")
+                
+        elif command == 'p':
+            # Pausar/reanudar simulación
+            if not game.editing_mode:
+                game.paused = not game.paused
+                status = "pausada" if game.paused else "reanudada"
+                print(f"Simulacion {status}")
+                
+        elif command == 'c':
+            # Limpiar grilla
+            game.clear_grid()
+            
+        elif command == 'r':
+            # Volver a modo edición
+            game.editing_mode = True
+            print("Modo EDICION activado")
+            
+        elif command in ['1', '2', '3', '4']:
+            # Cargar patrones
+            patterns = {'1': 'glider', '2': 'blinker', '3': 'block', '4': 'toad'}
+            game.load_pattern(patterns[command])
+            game.editing_mode = True
+            
+        elif command == 'q':
+            print("Saliendo del juego...")
+            exit()
+            
+        elif command == 'h' or command == 'help':
+            show_help()
+    
+    # Iniciar hilo de consola
+    thread = threading.Thread(target=console_thread, daemon=True)
+    thread.start()
+
+def show_help():
+    """Mostrar ayuda de comandos"""
+    print("\n=== COMANDOS DE CONSOLA ===")
+    print("y - Iniciar/pausar simulacion")
+    print("p - Pausar/reanudar simulacion")
+    print("c - Limpiar grilla")
+    print("r - Modo edicion")
+    print("1 - Cargar Glider")
+    print("2 - Cargar Blinker")
+    print("3 - Cargar Block")
+    print("4 - Cargar Toad")
+    print("h - Mostrar ayuda")
+    print("q - Salir")
+    print("==========================")
 
 def show_startup_animation():
     """Animación de inicio"""
@@ -206,30 +288,32 @@ def show_startup_animation():
 
 def show_menu():
     """Mostrar menú de patrones"""
-    print("\n🎯 PATRONES DISPONIBLES:")
+    print("\nPATRONES DISPONIBLES:")
     print("   1: Glider (se mueve)")
     print("   2: Blinker (oscila)")
-    print("   3: Block (estático)")
+    print("   3: Block (estatico)")
     print("   4: Toad (oscila)")
     print("   C: Continuar editando")
 
 def main():
-    print("🧬" * 25)
+    print("=" * 40)
     print("     JUEGO DE LA VIDA DE CONWAY")
     print("       Sense HAT Edition")
-    print("🧬" * 25)
+    print("=" * 40)
     
     show_startup_animation()
     
     game = ConwayGame()
     handle_keyboard_input(game)
+    handle_console_input(game)  # Agregar manejo de consola
     
     # Cargar un patrón inicial
     game.load_pattern("glider")
     
-    print("\n✨ ¡Juego iniciado!")
-    print("🎮 Usa el joystick para navegar")
-    print("📝 Modo: EDICIÓN")
+    print("\nJuego iniciado!")
+    print("Usa el joystick para navegar")
+    print("Modo: EDICION")
+    print("Escribe 'h' + ENTER para ver comandos")
     
     last_evolution = time.time()
     evolution_speed = 1.0  # segundos entre generaciones
@@ -247,14 +331,11 @@ def main():
                     game.evolve()
                     last_evolution = current_time
             
-            # Controles especiales por teclado simulado
-            # (En una implementación real, aquí irían las teclas del teclado)
-            
             time.sleep(0.05)  # 20 FPS
             
     except KeyboardInterrupt:
-        print("\n🏁 Fin de la simulación")
-        print(f"📊 Generaciones completadas: {game.generation}")
+        print("\nFin de la simulacion")
+        print(f"Generaciones completadas: {game.generation}")
         
         # Animación de cierre
         for fade in range(255, 0, -15):
@@ -269,14 +350,14 @@ def main():
         sense.clear()
 
 # Función adicional para controles extendidos via input del terminal
-def extended_controls():
-    """Controles adicionales que se pueden usar desde el terminal"""
-    print("\n🎮 CONTROLES EXTENDIDOS:")
-    print("Escribe comandos en el terminal:")
-    print("  'y' + ENTER: Alternar simulación")
-    print("  'c' + ENTER: Limpiar grilla")
-    print("  '1-4' + ENTER: Cargar patrón")
-    print("  'q' + ENTER: Salir")
+def show_patterns_menu():
+    """Mostrar menu de patrones disponibles"""
+    print("\nPATRONES DISPONIBLES:")
+    print("1 - Glider (se mueve diagonalmente)")
+    print("2 - Blinker (oscila vertical/horizontal)")
+    print("3 - Block (patron estatico)")
+    print("4 - Toad (oscilador periodo 2)")
+    print("Escribe el numero + ENTER para cargar")
 
 if __name__ == "__main__":
     main()
