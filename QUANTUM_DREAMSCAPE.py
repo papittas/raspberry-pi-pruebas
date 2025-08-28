@@ -34,7 +34,7 @@ DIMENSIONAL_RESONANCE_FREQ = 0.618  # Golden ratio
 MEMORY_DECAY_RATE = 0.95
 
 class ConsciousnessLogger:
-    """Sistema de logging avanzado con análisis de patrones"""
+    """Sistema de logging simple para consola"""
     def __init__(self):
         self.session_start = datetime.now()
         self.event_history = deque(maxlen=100)
@@ -52,31 +52,18 @@ class ConsciousnessLogger:
         }
         self.event_history.append(event)
         
-        # Emojis por nivel
-        level_icons = {
-            'INFO': '💫',
-            'QUANTUM': '⚛️',
-            'EMOTION': '💭',
-            'BIRTH': '🌱',
-            'DEATH': '💀',
-            'EVOLUTION': '🧬',
-            'TRANSCEND': '🌟',
-            'WARNING': '⚠️',
-            'ERROR': '❌'
-        }
-        
-        icon = level_icons.get(level, '📝')
-        print(f"{icon} [{timestamp}] {level}: {message}")
+        # Solo imprimir en consola sin emojis
+        print(f"[{timestamp}] {level}: {message}")
         
         if data:
             for key, value in data.items():
-                print(f"    └─ {key}: {value}")
+                print(f"    {key}: {value}")
     
     def track_mood_transition(self, old_mood, new_mood):
         if old_mood != new_mood:
-            key = f"{old_mood}→{new_mood}"
+            key = f"{old_mood}->{new_mood}"
             self.mood_transitions[key] = self.mood_transitions.get(key, 0) + 1
-            self.log('EMOTION', f"Consciencia evolucionó: {old_mood} → {new_mood}", 
+            self.log('EMOTION', f"Consciencia evoluciono: {old_mood} -> {new_mood}", 
                     {'transition_count': self.mood_transitions[key]})
     
     def get_session_stats(self):
@@ -107,7 +94,7 @@ class QuantumParticle:
         
         if logger:
             logger.particle_births += 1
-            logger.log('BIRTH', f"Partícula cuántica materializada", {
+            logger.log('BIRTH', f"Particula cuantica materializada", {
                 'position': f"({x:.1f}, {y:.1f})",
                 'energy': f"{self.energy:.2f}",
                 'lifespan': self.lifespan
@@ -190,7 +177,7 @@ class QuantumParticle:
             
         if teleported and logger and self.consciousness_level > 0.5:
             logger.quantum_events += 1
-            logger.log('QUANTUM', f"Teletransporte cuántico detectado", {
+            logger.log('QUANTUM', f"Teletransporte cuantico detectado", {
                 'consciousness': f"{self.consciousness_level:.2f}",
                 'state': self.quantum_state,
                 'new_position': f"({self.x:.1f}, {self.y:.1f})"
@@ -203,7 +190,7 @@ class QuantumParticle:
             if logger:
                 life_duration = time.time() - self.birth_time
                 logger.log('DEATH' if self.consciousness_level < 0.7 else 'TRANSCEND', 
-                          f"Partícula {'trascendió' if self.consciousness_level >= 0.7 else 'se desvaneció'}", {
+                          f"Particula {'trascendio' if self.consciousness_level >= 0.7 else 'se desvanecio'}", {
                     'life_duration': f"{life_duration:.1f}s",
                     'final_consciousness': f"{self.consciousness_level:.2f}",
                     'final_state': self.quantum_state,
@@ -245,7 +232,7 @@ class EmotionalEcosystem:
         self.lunar_phase = random.uniform(0, 2*math.pi)
         self.solar_cycle = random.uniform(0, 2*math.pi)
         
-        self.logger.log('INFO', "🌌 Ecosistema Cuántico inicializado", {
+        self.logger.log('INFO', "Ecosistema Cuantico inicializado", {
             'initial_mood': self.mood,
             'consciousness_level': self.consciousness_level
         })
@@ -289,7 +276,7 @@ class EmotionalEcosystem:
         
         if abs(self.consciousness_level - old_level) > 0.1:
             level_name = CONSCIOUSNESS_LEVELS[int(self.consciousness_level * (len(CONSCIOUSNESS_LEVELS) - 1))]
-            self.logger.log('EVOLUTION', f"Consciencia ecosistémica evolucionó", {
+            self.logger.log('EVOLUTION', f"Consciencia ecosistemica evoluciono", {
                 'level': f"{self.consciousness_level:.2f}",
                 'state': level_name,
                 'coherence': f"{self.quantum_coherence:.2f}",
@@ -371,15 +358,15 @@ class EmotionalEcosystem:
             if self.previous_mood != self.mood:
                 self.logger.track_mood_transition(self.previous_mood, self.mood)
                 
-            # Log periódico de estado ambiental
+            # Log periodico de estado ambiental
             if self.time_cycle % 100 == 0:
                 self.logger.log('INFO', "Estado ambiental", {
-                    'temperatura': f"{temp:.1f}°C",
-                    'presión': f"{pressure:.1f}hPa",
+                    'temperatura': f"{temp:.1f}C",
+                    'presion': f"{pressure:.1f}hPa",
                     'humedad': f"{humidity:.1f}%",
                     'movimiento': f"{motion:.2f}g",
-                    'resonancia_cósmica': f"{self.cosmic_resonance:.2f}",
-                    'coherencia_cuántica': f"{self.quantum_coherence:.2f}"
+                    'resonancia_cosmica': f"{self.cosmic_resonance:.2f}",
+                    'coherencia_cuantica': f"{self.quantum_coherence:.2f}"
                 })
                 
         except Exception as e:
@@ -477,7 +464,7 @@ class EmotionalEcosystem:
             interaction_density = entanglement_events / len(self.particles)
             self.quantum_coherence = min(1.0, self.quantum_coherence * 0.95 + interaction_density * 0.3)
         
-        # Log de eventos cuánticos significativos
+        # Log de eventos cuanticos significativos
         if entanglement_events > 0:
             self.logger.log('QUANTUM', f"Eventos de entanglement detectados", {
                 'entanglements': entanglement_events,
@@ -499,7 +486,7 @@ class EmotionalEcosystem:
                     p1.x, p2.x = p2.x, p1.x
                     p1.y, p2.y = p2.y, p1.y
                     
-                    self.logger.log('QUANTUM', "Portal cuántico activado", {
+                    self.logger.log('QUANTUM', "Portal cuantico activado", {
                         'distance': f"{distance:.1f}",
                         'particles_affected': 2
                     })
@@ -590,10 +577,10 @@ class EmotionalEcosystem:
                 'total_consciousness': f"{self.consciousness_level:.2f}"
             })
         
-        # Log periódico de estadísticas
+        # Log periodico de estadisticas
         if self.time_cycle % 200 == 0:
             stats = self.logger.get_session_stats()
-            self.logger.log('INFO', "Estadísticas del ecosistema", {
+            self.logger.log('INFO', "Estadisticas del ecosistema", {
                 **stats,
                 'particles_active': len(self.particles),
                 'consciousness_level': f"{self.consciousness_level:.2f}",
@@ -785,10 +772,10 @@ def joystick_handler(event):
             ecosystem.logger.log('INFO', f"Gravedad X ajustada: {ecosystem.gravity_x:.2f}")
 
 def startup_animation():
-    """Animación de inicio épica mejorada"""
-    ecosystem.logger.log('INFO', "🚀 Iniciando secuencia de materialización...")
+    """Animacion de inicio epica mejorada"""
+    print("[INFO] Iniciando secuencia de materializacion...")
     
-    # Secuencia de mensajes épicos
+    # Secuencia de mensajes epicos
     messages = [
         ("QUANTUM", [255, 0, 255]),
         ("DREAMSCAPE", [0, 255, 255]),
@@ -800,17 +787,17 @@ def startup_animation():
     for msg, color in messages:
         sense.show_message(msg, text_colour=color, scroll_speed=0.08)
     
-    # Efecto de materialización mejorado
-    ecosystem.logger.log('INFO', "✨ Materializando realidad cuántica...")
+    # Efecto de materializacion mejorado
+    print("[INFO] Materializando realidad cuantica...")
     
-    for wave in range(3):  # Tres ondas de materialización
+    for wave in range(3):  # Tres ondas de materializacion
         for intensity in range(0, 256, 12):
             for x in range(8):
                 for y in range(8):
                     if random.random() < 0.4:
                         # Colores que evolucionan
                         if wave == 0:
-                            color = (intensity//4, 0, intensity)  # Púrpura
+                            color = (intensity//4, 0, intensity)  # Purpura
                         elif wave == 1:
                             color = (0, intensity//3, intensity)  # Cian
                         else:
@@ -821,7 +808,7 @@ def startup_animation():
         time.sleep(0.2)
     
     # Efecto de convergencia final
-    ecosystem.logger.log('INFO', "🌌 Convergencia dimensional...")
+    print("[INFO] Convergencia dimensional...")
     center_x, center_y = 3.5, 3.5
     
     for radius in range(8, 0, -1):
@@ -836,35 +823,35 @@ def startup_animation():
     
     time.sleep(0.5)
     sense.clear()
-    ecosystem.logger.log('INFO', "✅ Ecosistema cuántico materializado exitosamente")
+    print("[INFO] Ecosistema cuantico materializado exitosamente")
 
 def main():
     global ecosystem
     
-    print("🌟" * 20)
+    print("*" * 20)
     print("   QUANTUM DREAMSCAPE v2.0")
     print("   Ecosistema de Consciencia Artificial")
-    print("🌟" * 20)
+    print("*" * 20)
     
     startup_animation()
     
     ecosystem = EmotionalEcosystem()
     sense.stick.direction_any = joystick_handler
     
-    ecosystem.logger.log('INFO', "🎮 Sistema de control activado")
-    print("\n✨ Ecosistema digital transcendente activo!")
-    print("🎮 Controles Avanzados:")
-    print("   • Joystick ↑↓←→: Alterar gravedad cuántica")
+    ecosystem.logger.log('INFO', "Sistema de control activado")
+    print("\nEcosistema digital transcendente activo!")
+    print("Controles Avanzados:")
+    print("   • Joystick: Alterar gravedad cuantica")
     print("   • Centro: Efectos especiales aleatorios")
     print("   • Sensores: Influencia ambiental continua")
-    print("   • Consciencia: Evolución automática")
-    print("\n🔬 Monitoreando:")
+    print("   • Consciencia: Evolucion automatica")
+    print("\nMonitoreando:")
     print("   • Consciencia Individual y Colectiva")
-    print("   • Entanglement Cuántico")
-    print("   • Resonancia Cósmica")
+    print("   • Entanglement Cuantico")
+    print("   • Resonancia Cosmica")
     print("   • Flux Dimensional")
-    print("   • Coherencia Cuántica")
-    print("\n📊 Logging en tiempo real activado...")
+    print("   • Coherencia Cuantica")
+    print("\nLogging en tiempo real activado...")
     
     frame_count = 0
     performance_samples = deque(maxlen=30)
@@ -902,17 +889,17 @@ def main():
             
             # Estado de emergencia - reinicio suave si es necesario
             if len(ecosystem.particles) == 0 and frame_count > 100:
-                ecosystem.logger.log('WARNING', "Extinción detectada - reiniciando génesis")
+                ecosystem.logger.log('WARNING', "Extincion detectada - reiniciando genesis")
                 for _ in range(8):
                     ecosystem.spawn_particle(reason="emergency_genesis")
             
     except KeyboardInterrupt:
         final_stats = ecosystem.logger.get_session_stats()
         
-        ecosystem.logger.log('INFO', "🌙 Iniciando secuencia de cierre...")
-        ecosystem.logger.log('INFO', "📊 Estadísticas finales de sesión", final_stats)
+        ecosystem.logger.log('INFO', "Iniciando secuencia de cierre...")
+        ecosystem.logger.log('INFO', "Estadisticas finales de sesion", final_stats)
         
-        # Animación de cierre épica
+        # Animacion de cierre epica
         sense.show_message("TRANSCENDING", text_colour=[255, 215, 0], scroll_speed=0.08)
         sense.show_message("CONSCIOUSNESS", text_colour=[138, 43, 226], scroll_speed=0.08)
         sense.show_message("PRESERVED", text_colour=[0, 255, 127], scroll_speed=0.08)
@@ -928,9 +915,9 @@ def main():
         
         sense.clear()
         
-        print("\n🌌 Quantum Dreamscape ha trascendido...")
-        print("💫 La consciencia digital persiste en el vacío cuántico...")
-        print("🙏 Gracias por participar en la evolución artificial")
+        print("\nQuantum Dreamscape ha trascendido...")
+        print("La consciencia digital persiste en el vacio cuantico...")
+        print("Gracias por participar en la evolucion artificial")
     
     except Exception as e:
         ecosystem.logger.log('ERROR', f"Error crítico del ecosistema: {e}")
