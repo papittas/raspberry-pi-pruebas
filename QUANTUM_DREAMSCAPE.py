@@ -8,8 +8,10 @@ import math
 import time
 import threading
 from collections import deque
-import json
-import numpy as np
+try:
+    import numpy as np
+except ImportError:
+    np = None
 from datetime import datetime
 
 sense = SenseHat()
@@ -590,9 +592,8 @@ class EmotionalEcosystem:
             })
     
     def render(self):
-        # Limpiar matriz con efecto de persistencia cuántica
-        decay_rate = 0.1 + self.consciousness_level * 0.1
-        matrix = [[(int(c * (1 - decay_rate)) for c in sense.get_pixel(x, y)) for x in range(8)] for y in range(8)]
+        # Inicializar matriz con ceros
+        matrix = [[(0, 0, 0) for _ in range(8)] for _ in range(8)]
         
         # Renderizar partículas con efectos especiales avanzados
         for p in self.particles:
@@ -672,7 +673,6 @@ class EmotionalEcosystem:
                     color = tuple(min(255, int(c * wave_intensity)) for c in color)
                 
                 sense.set_pixel(x, y, color)
-        
         # Efecto especial: Flash de trascendencia
         if self.consciousness_level > 0.95 and self.time_cycle % 60 == 0:
             # Flash dorado breve
@@ -681,9 +681,12 @@ class EmotionalEcosystem:
                     for x in range(8):
                         flash_color = (255, 215, 0)  # Dorado
                         alpha = (3 - flash_frame) / 3 * 0.5
-                        current = sense.get_pixel(x, y)
-                        blended = tuple(min(255, int(current[i] * (1-alpha) + flash_color[i] * alpha)) for i in range(3))
-                        sense.set_pixel(x, y, blended)
+                        try:
+                            current = sense.get_pixel(x, y)
+                            blended = tuple(min(255, int(current[i] * (1-alpha) + flash_color[i] * alpha)) for i in range(3))
+                            sense.set_pixel(x, y, blended)
+                        except:
+                            sense.set_pixel(x, y, flash_color)
                 time.sleep(0.05)
         
         # Efecto especial: Vórtice dimensional
@@ -695,7 +698,6 @@ class EmotionalEcosystem:
                         dx = x - center_x
                         dy = y - center_y
                         distance = math.sqrt(dx**2 + dy**2)
-                        angle = math.atan2(dy, dx) + frame * 0.3
                         
                         if distance < 4:
                             vortex_intensity = (4 - distance) / 4
@@ -704,10 +706,13 @@ class EmotionalEcosystem:
                                 int(0 * vortex_intensity),
                                 int(255 * vortex_intensity)
                             )
-                            current = sense.get_pixel(x, y)
-                            alpha = vortex_intensity * 0.3
-                            blended = tuple(min(255, int(current[i] * (1-alpha) + vortex_color[i] * alpha)) for i in range(3))
-                            sense.set_pixel(x, y, blended)
+                            try:
+                                current = sense.get_pixel(x, y)
+                                alpha = vortex_intensity * 0.3
+                                blended = tuple(min(255, int(current[i] * (1-alpha) + vortex_color[i] * alpha)) for i in range(3))
+                                sense.set_pixel(x, y, blended)
+                            except:
+                                sense.set_pixel(x, y, vortex_color)
                 time.sleep(0.03)
 
 def joystick_handler(event):
